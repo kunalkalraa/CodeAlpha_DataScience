@@ -1,0 +1,185 @@
+Let's build a predictive model using linear regression. We'll use a well-known dataset for this example: the Boston Housing dataset, which contains information about various features of houses in Boston along
+with their prices. The target variable we want to predict is the price of the house.
+
+### Step 1: Import Libraries and Load Data
+
+First, we need to import necessary libraries and load the dataset.
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.datasets import load_boston
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Load the Boston Housing dataset
+boston = load_boston()
+data = pd.DataFrame(boston.data, columns=boston.feature_names)
+data['PRICE'] = boston.target
+
+# Display the first few rows of the dataset
+data.head()
+```
+
+### Step 2: Exploratory Data Analysis (EDA)
+
+Let's perform some EDA to understand the dataset better.
+
+```python
+# Display summary statistics
+data.describe()
+
+# Check for missing values
+data.isnull().sum()
+
+# Visualize the relationship between features and the target variable
+sns.pairplot(data, x_vars=['RM', 'LSTAT', 'PTRATIO'], y_vars='PRICE', height=7, aspect=0.7, kind='reg')
+plt.show()
+
+# Compute the correlation matrix
+corr_matrix = data.corr()
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
+plt.show()
+```
+
+### Step 3: Data Preparation
+
+Prepare the data for training the linear regression model.
+
+```python
+# Define features and target variable
+X = data.drop('PRICE', axis=1)
+y = data['PRICE']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+```
+
+### Step 4: Build and Train the Linear Regression Model
+
+Define the model, train it on the training data, and evaluate its performance.
+
+```python
+# Create and train the Linear Regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+r2 = r2_score(y_test, y_pred)
+
+print(f"Mean Squared Error: {mse}")
+print(f"Root Mean Squared Error: {rmse}")
+print(f"R-squared: {r2}")
+```
+
+### Step 5: Visualize the Results
+
+Let's visualize the predictions versus the actual values.
+
+```python
+# Scatter plot of actual vs predicted values
+plt.figure(figsize=(10, 6))
+plt.scatter(y_test, y_pred, edgecolor='k', alpha=0.7)
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r', lw=2)
+plt.xlabel('Actual')
+plt.ylabel('Predicted')
+plt.title('Actual vs Predicted House Prices')
+plt.show()
+
+# Residual plot
+plt.figure(figsize=(10, 6))
+sns.residplot(y_test, y_pred, lowess=True, color='g')
+plt.xlabel('Actual')
+plt.ylabel('Residual')
+plt.title('Residuals vs Actual House Prices')
+plt.show()
+```
+
+### Full Code
+
+Here's the complete code in a single block for ease of use:
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.datasets import load_boston
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Load the Boston Housing dataset
+boston = load_boston()
+data = pd.DataFrame(boston.data, columns=boston.feature_names)
+data['PRICE'] = boston.target
+
+# Display the first few rows of the dataset
+data.head()
+
+# Display summary statistics
+data.describe()
+
+# Check for missing values
+data.isnull().sum()
+
+# Visualize the relationship between features and the target variable
+sns.pairplot(data, x_vars=['RM', 'LSTAT', 'PTRATIO'], y_vars='PRICE', height=7, aspect=0.7, kind='reg')
+plt.show()
+
+# Compute the correlation matrix
+corr_matrix = data.corr()
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
+plt.show()
+
+# Define features and target variable
+X = data.drop('PRICE', axis=1)
+y = data['PRICE']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train the Linear Regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+r2 = r2_score(y_test, y_pred)
+
+print(f"Mean Squared Error: {mse}")
+print(f"Root Mean Squared Error: {rmse}")
+print(f"R-squared: {r2}")
+
+# Scatter plot of actual vs predicted values
+plt.figure(figsize=(10, 6))
+plt.scatter(y_test, y_pred, edgecolor='k', alpha=0.7)
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r', lw=2)
+plt.xlabel('Actual')
+plt.ylabel('Predicted')
+plt.title('Actual vs Predicted House Prices')
+plt.show()
+
+# Residual plot
+plt.figure(figsize=(10, 6))
+sns.residplot(y_test, y_pred, lowess=True, color='g')
+plt.xlabel('Actual')
+plt.ylabel('Residual')
+plt.title('Residuals vs Actual House Prices')
+plt.show()
+```
+
+This code will load the Boston Housing dataset, perform exploratory data analysis, prepare the data, build and train a linear regression model, evaluate the model's performance, and visualize the results. 
+Make sure you have the necessary libraries installed (e.g., `numpy`, `pandas`, `matplotlib`, `seaborn`, `sklearn`).
